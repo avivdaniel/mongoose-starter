@@ -113,6 +113,8 @@ app.delete('/user/:id', (req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
+// Posts ROUTE goes here:
+
 app.put('/post', (req, res) => {
     const post = new Post(req.body);
     post.save() //async
@@ -124,7 +126,7 @@ app.get('/post', (req, res) => {
     Post.find()
         .then(posts => res.json(posts))
         .catch(err => res.status(400).json(err));
-})
+});
 
 app.get('/post/:id', (req, res) => {
     Post.findById(req.params.id)
@@ -136,6 +138,37 @@ app.get('/post/:id', (req, res) => {
             res.json(post);
         })
         .catch(err => res.json(err));
-})
+});
+
+app.post('/post/:id', (req, res) => {
+    Post.findById(req.params.id)
+        .then((post) => {
+            if (!post) {
+                res.sendStatus(404);
+                return;
+            }
+            post.update(req.body)
+                .then(() => res.sendStatus(200))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.json(err));
+});
+
+app.delete('/post/:id', (req, res) => {
+    Post.findById(req.params.id)
+        .then((post) => {
+            if (!post) {
+                res.sendStatus(404);
+                return;
+            }
+            post.remove()
+                .then(() => res.sendStatus(204))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.json(err));
+
+});
+
+
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
 
