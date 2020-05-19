@@ -120,6 +120,22 @@ app.put('/post', (req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
+app.get('/post', (req, res) => {
+    Post.find()
+        .then(posts => res.json(posts))
+        .catch(err => res.status(400).json(err));
+})
 
+app.get('/post/:id', (req, res) => {
+    Post.findById(req.params.id)
+        .then((post) => {
+            if (!post) {
+                res.sendStatus(404);
+                return;
+            }
+            res.json(post);
+        })
+        .catch(err => res.json(err));
+})
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
 
