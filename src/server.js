@@ -113,6 +113,26 @@ app.delete('/user/:id', (req, res) => {
         .catch(err => res.status(400).json(err));
 });
 
+app.get('/user/:id/post', (req, res) => {
+    User.findById(req.params.id)
+        .then(user => {
+            if (!user) {
+                res.sendStatus(404);
+                return;
+            }
+            Post.find({ userId: (req.params.id) })
+                .then(post => {
+                    if (!post) {
+                        res.sendStatus(404);
+                        return;
+                    }
+                    res.json(post);
+                })
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(400).json(err));
+})
+
 // Posts ROUTE goes here:
 
 app.put('/post', (req, res) => {
